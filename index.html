@@ -1,625 +1,3026 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <meta name="theme-color" content="#f6e8ad">
   <title>Something You Might Need Today</title>
 
   <style>
-
     * {
-
       box-sizing: border-box;
+    }
 
+    html, body {
+      margin: 0;
+      min-height: 100%;
     }
 
     body {
-
-      margin: 0;
-
       min-height: 100vh;
-
-      font-family: Arial, sans-serif;
-
+      font-family: Arial, Helvetica, sans-serif;
       display: flex;
-
       align-items: center;
-
       justify-content: center;
-
       padding: 24px;
-
       transition: background 0.6s ease;
-
       color: #2f3431;
-
     }
 
     .page {
-
       width: 100%;
-
       max-width: 560px;
-
     }
 
     .card {
-
-      background: rgba(255, 255, 255, 0.92);
-
+      background: rgba(255, 255, 255, 0.93);
       border-radius: 28px;
-
       padding: 42px 28px 30px;
-
       text-align: center;
-
       box-shadow: 0 16px 45px rgba(0,0,0,0.10);
-
       backdrop-filter: blur(8px);
-
     }
 
     .icon {
-
-      font-size: 36px;
-
+      font-size: 38px;
       margin-bottom: 15px;
-
     }
 
     .category {
-
       font-size: 13px;
-
       letter-spacing: 2px;
-
       text-transform: uppercase;
-
       color: #68716b;
-
-      margin-bottom: 18px;
-
+      margin-bottom: 20px;
     }
 
     .message {
-
       font-size: 28px;
-
       line-height: 1.35;
-
-      font-weight: 600;
-
+      font-weight: 700;
       margin: 0 auto 28px;
-
       max-width: 470px;
-
     }
 
     .care-box {
-
       display: none;
-
-      padding: 20px;
-
+      padding: 21px;
       border-radius: 18px;
-
       margin-top: 10px;
-
       font-size: 17px;
-
       line-height: 1.5;
-
     }
 
     .care-title {
-
-      font-weight: bold;
-
+      font-weight: 700;
       margin-bottom: 8px;
-
     }
 
     .needed-button {
-
       margin-top: 28px;
-
       border: none;
-
       border-radius: 999px;
-
       padding: 14px 22px;
-
       font-size: 16px;
-
       cursor: pointer;
-
       background: #ffffff;
-
+      color: #222;
       box-shadow: 0 5px 16px rgba(0,0,0,0.08);
-
-      transition: transform 0.2s ease;
-
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .needed-button:hover {
-
       transform: translateY(-2px);
+      box-shadow: 0 7px 18px rgba(0,0,0,0.10);
+    }
 
+    .needed-button:focus-visible {
+      outline: 3px solid rgba(40, 90, 160, 0.35);
+      outline-offset: 3px;
     }
 
     .response {
-
       min-height: 26px;
-
       margin-top: 15px;
-
       font-size: 16px;
-
       font-weight: 600;
-
     }
 
     .footer {
-
       margin-top: 26px;
-
       font-size: 13px;
-
+      line-height: 1.45;
       color: #747b76;
-
     }
 
     @media (max-width: 600px) {
-
       body {
-
         padding: 18px;
-
       }
 
       .card {
-
         padding: 36px 22px 26px;
-
       }
 
       .message {
-
         font-size: 25px;
-
       }
 
+      .care-box {
+        font-size: 16px;
+      }
     }
-
   </style>
-
 </head>
 
 <body>
-
   <div class="page">
-
     <div class="card">
-
       <div class="icon" id="icon">🌿</div>
 
       <div class="category" id="category">
-
         Something you might need today
-
       </div>
 
       <div class="message" id="message"></div>
 
       <div class="care-box" id="careBox">
-
         <div class="care-title" id="careTitle"></div>
-
         <div id="careText"></div>
-
       </div>
 
-      <button class="needed-button" id="neededButton">
-
+      <button class="needed-button" id="neededButton" type="button">
         ❤️ I needed that today
-
       </button>
 
-      <div class="response" id="response"></div>
+      <div class="response" id="response" aria-live="polite"></div>
 
       <div class="footer">
-
         Come back tomorrow. There'll be something different waiting for you.
-
       </div>
-
     </div>
-
   </div>
 
   <script>
-
     const messages = [
-
       {
-
         category: "In case nobody told you today",
-
         icon: "🌿",
-
         theme: "sage",
-
         affirmation: "You are appreciated more than you probably realise.",
-
-        care: "Take the compliment without arguing with it. You deserve it."
-
+        care: "Relax your shoulders and take three slow breaths."
       },
-
       {
-
         category: "Today's reminder",
-
         icon: "☀️",
-
         theme: "sun",
-
         affirmation: "You do not need to have everything figured out today.",
-
-        care: "Relax your shoulders and focus only on the next thing in front of you."
-
+        care: "Send a quick message to someone you appreciate."
       },
-
       {
-
         category: "A little perspective",
-
-        icon: "💙",
-
+        icon: "🌊",
         theme: "blue",
-
         affirmation: "A difficult moment does not have to become a difficult day.",
-
-        care: "Take a drink of water, reset and start the next moment fresh."
-
+        care: ""
       },
-
       {
-
         category: "For you today",
-
         icon: "🌸",
-
         theme: "peach",
-
         affirmation: "The work you do matters, even on the days nobody says it.",
-
-        care: ""
-
+        care: "If you need help, choose one person you could ask."
       },
-
       {
-
         category: "60-second reset",
-
         icon: "🌱",
-
         theme: "sage",
-
         affirmation: "You are allowed to slow down without feeling guilty.",
-
-        care: "Step away from your screen for one minute. Stretch, breathe and look away from the screen."
-
+        care: "Take a moment to think of something you are looking forward to."
       },
-
       {
-
         category: "Today's encouragement",
-
         icon: "✨",
-
         theme: "lavender",
-
         affirmation: "Progress still counts when it feels small.",
-
-        care: ""
-
+        care: "If you are stuck, step away for two minutes and come back fresh."
       },
-
       {
-
         category: "A reminder worth keeping",
-
         icon: "💛",
-
         theme: "sun",
-
         affirmation: "You deserve the same kindness you give to everyone else.",
-
-        care: "Talk to yourself today the way you would talk to someone you care about."
-
+        care: ""
       },
-
       {
-
         category: "Take a moment",
-
-        icon: "🌊",
-
+        icon: "💙",
         theme: "blue",
-
         affirmation: "You have made it through every difficult day so far.",
-
-        care: "Take five slow breaths and give yourself a minute before moving on."
-
+        care: "Take a moment to notice one thing that is going right."
       },
-
       {
-
-        category: "For you today",
-
-        icon: "🌷",
-
-        theme: "peach",
-
-        affirmation: "You do not have to be productive every second to be valuable.",
-
-        care: ""
-
-      },
-
-      {
-
-        category: "Today's reminder",
-
-        icon: "☀️",
-
-        theme: "sun",
-
-        affirmation: "Today does not need to be perfect to be good.",
-
-        care: "Notice one small thing today that made you smile."
-
-      },
-
-      {
-
-        category: "In case you forgot",
-
-        icon: "💜",
-
-        theme: "lavender",
-
-        affirmation: "Your best can look different from one day to the next.",
-
-        care: ""
-
-      },
-
-      {
-
-        category: "Something worth remembering",
-
-        icon: "🌿",
-
-        theme: "sage",
-
-        affirmation: "You make a difference simply by showing up.",
-
-        care: "Take a moment to recognise how much you have already handled."
-
-      },
-
-      {
-
-        category: "Today's permission slip",
-
-        icon: "🌸",
-
-        theme: "peach",
-
-        affirmation: "It is okay to ask for help.",
-
-        care: "If something feels heavy today, you do not have to carry all of it alone."
-
-      },
-
-      {
-
-        category: "A little perspective",
-
-        icon: "🌊",
-
-        theme: "blue",
-
-        affirmation: "You are more than your to-do list.",
-
-        care: ""
-
-      },
-
-      {
-
-        category: "Today's tiny reset",
-
-        icon: "🌱",
-
-        theme: "sage",
-
-        affirmation: "One good moment can change the direction of your day.",
-
-        care: "Make a coffee, stretch, step outside or play a song you love."
-
-      },
-
-      {
-
-        category: "In case nobody told you today",
-
-        icon: "💛",
-
-        theme: "sun",
-
-        affirmation: "You bring something to this team that nobody else can.",
-
-        care: ""
-
-      },
-
-      {
-
-        category: "A thought for today",
-
-        icon: "✨",
-
-        theme: "lavender",
-
-        affirmation: "You don't need a perfect day. Just a better next moment.",
-
-        care: "Choose one small thing that could make the next hour easier."
-
-      },
-
-      {
-
-        category: "Today's encouragement",
-
-        icon: "🌸",
-
-        theme: "peach",
-
-        affirmation: "You are doing better than you think.",
-
-        care: ""
-
-      },
-
-      {
-
-        category: "A reminder for busy days",
-
-        icon: "🌿",
-
-        theme: "sage",
-
-        affirmation: "Your contribution is valuable even when it goes unnoticed.",
-
-        care: "Pause for a moment and recognise one thing you have done well today."
-
-      },
-
-      {
-
         category: "Just for today",
-
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You do not have to be productive every second to be valuable.",
+        care: "Ask yourself whether this really has to be solved right now."
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "Today does not need to be perfect to be good.",
+        care: ""
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "Your best can look different from one day to the next.",
+        care: "Give yourself a genuine break, not a break filled with more tasks."
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You make a difference simply by showing up.",
+        care: "Relax your shoulders and take three slow breaths."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "It is okay to ask for help.",
+        care: ""
+      },
+      {
+        category: "A small boost",
         icon: "☀️",
-
         theme: "sun",
-
+        affirmation: "You are more than your to-do list.",
+        care: "Close your eyes for ten seconds and unclench your jaw."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "One good moment can change the direction of your day.",
+        care: "If you need help, choose one person you could ask."
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You bring something to this team that nobody else can.",
+        care: "Remind yourself that one bad moment does not get the whole day."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You don't need a perfect day. Just a better next moment.",
+        care: ""
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are doing better than you think.",
+        care: "Choose one small thing that could make the next hour easier."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "Your contribution is valuable even when it goes unnoticed.",
+        care: "If your mind is racing, write down the next three things and ignore the rest for now."
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
         affirmation: "You do not need to earn your rest.",
-
-        care: "Give yourself five quiet minutes without feeling you need to justify them."
-
+        care: ""
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "Small steps still move you forward.",
+        care: "Put your phone down for two minutes and let your mind be quiet."
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You are allowed to protect your energy.",
+        care: "Take a moment to appreciate how much you have already managed."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "Being busy is not the same as being valuable.",
+        care: ""
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "Your effort matters, even when the result is not immediate.",
+        care: "Step outside for a minute if you can and notice the air."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You can be proud of how far you have come.",
+        care: "Make your next drink something you enjoy, not just something you need."
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You are allowed to have an ordinary day.",
+        care: "Take a slow breath before your next reply or conversation."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You don't have to carry everything at once.",
+        care: ""
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "One unfinished task does not define your day.",
+        care: "Take a breath and ask: what is actually important right now?"
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You deserve moments that feel easy.",
+        care: "Take five quiet minutes without feeling you need to justify them."
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are capable of more than this stressful moment suggests.",
+        care: ""
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You can begin again at any point in the day.",
+        care: "Take sixty seconds with no screen, no typing and no problem-solving."
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You are not behind. You are moving at your own pace.",
+        care: "Make one small part of your workspace feel calmer."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "It is okay if today is about getting through, not getting ahead.",
+        care: ""
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "Your presence matters.",
+        care: "Look away from your screen for one minute and let your eyes rest."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You can care about your work without letting it consume you.",
+        care: "Put both feet on the floor and take one slow breath in and out."
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You are allowed to say no when your plate is full.",
+        care: "Make your next drink something you enjoy, not just something you need."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "A pause can be productive too.",
+        care: ""
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You deserve credit for the things that nobody sees you handling.",
+        care: "Drink some water and take a proper breath before you keep going."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "You can take things one conversation, one email and one task at a time.",
+        care: "Take a breath and ask: what is actually important right now?"
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You do not need permission to take care of yourself.",
+        care: ""
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "Your worth is not measured by how much you complete today.",
+        care: "Stretch your hands, neck and shoulders before continuing."
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You can have a good day even if everything does not go to plan.",
+        care: "Take sixty seconds with no screen, no typing and no problem-solving."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "What feels heavy now may feel lighter after a pause.",
+        care: ""
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You are allowed to be proud of yourself.",
+        care: "Notice if you are holding tension somewhere and let it soften."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You have already done things you once thought would be hard.",
+        care: "Look away from your screen for one minute and let your eyes rest."
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are somebody's reason their workday feels a little better.",
+        care: "Give yourself permission to leave one non-urgent thing until tomorrow."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You can make space for yourself too.",
+        care: ""
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You do not need to explain why you need a break.",
+        care: "Give yourself credit for one invisible thing you have handled today."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You are allowed to learn as you go.",
+        care: "Let yourself finish one thing before beginning three more."
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "Not every problem needs to be solved immediately.",
+        care: ""
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You can be both a work in progress and worthy of appreciation.",
+        care: "Think of one thing you have done well today."
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "The smallest win is still a win.",
+        care: "Take the compliment without arguing with it."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You have permission to leave some things for tomorrow.",
+        care: ""
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You are stronger than one difficult email, meeting or moment.",
+        care: "Choose one thing you can stop carrying for the rest of today."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "You can choose calm even when the day is busy.",
+        care: "If you are stuck, step away for two minutes and come back fresh."
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You do not have to match everyone else's pace.",
+        care: "Stand up, stretch and notice how your body feels."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You are allowed to celebrate quiet progress.",
+        care: ""
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You matter beyond the work you produce.",
+        care: "Ask yourself whether this really has to be solved right now."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You can reset without starting the whole day over.",
+        care: "If you can, take a short walk before starting the next task."
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You are allowed to take up space.",
+        care: ""
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "The way you support others matters.",
+        care: "Relax your shoulders and take three slow breaths."
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "Your kindness has an impact you may never see.",
+        care: "Send a quick message to someone you appreciate."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You can let one mistake stay one mistake.",
+        care: ""
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You are allowed to have boundaries.",
+        care: "If you need help, choose one person you could ask."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You can do hard things without being hard on yourself.",
+        care: "Take a moment to think of something you are looking forward to."
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are not required to be everything to everyone.",
+        care: "If you are stuck, step away for two minutes and come back fresh."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "There is room in today for something good.",
+        care: ""
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You deserve to feel supported too.",
+        care: "Take a moment to notice one thing that is going right."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "One breath can be the start of a reset.",
+        care: "Ask yourself whether this really has to be solved right now."
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You do not need to rush what can be done steadily.",
+        care: ""
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "You can trust yourself to handle the next step.",
+        care: "Give yourself a genuine break, not a break filled with more tasks."
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You are allowed to enjoy the good moments without waiting for something to go wrong.",
+        care: "Relax your shoulders and take three slow breaths."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You have more influence than you realise.",
+        care: ""
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You can be tired and still be doing a good job.",
+        care: "Close your eyes for ten seconds and unclench your jaw."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You deserve a little gentleness today.",
+        care: "If you need help, choose one person you could ask."
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You do not have to prove your value.",
+        care: "Remind yourself that one bad moment does not get the whole day."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You are allowed to change your mind.",
+        care: ""
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You can leave work at work when the day is done.",
+        care: "Choose one small thing that could make the next hour easier."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You have already made it through things you thought you couldn't.",
+        care: "If your mind is racing, write down the next three things and ignore the rest for now."
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You can choose progress over pressure.",
+        care: ""
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You do not need to apologise for needing time.",
+        care: "Put your phone down for two minutes and let your mind be quiet."
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are allowed to have limits.",
+        care: "Take a moment to appreciate how much you have already managed."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "Your calm matters as much as your productivity.",
+        care: ""
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You can be learning and still be capable.",
+        care: "Step outside for a minute if you can and notice the air."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You have permission to enjoy today.",
+        care: "Make your next drink something you enjoy, not just something you need."
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You are enough on the quiet days too.",
+        care: "Take a slow breath before your next reply or conversation."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "You do not need to fix everything for everyone.",
+        care: ""
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You can take pride in being dependable without carrying the whole load.",
+        care: "Take a breath and ask: what is actually important right now?"
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You are allowed to ask, 'Can this wait?'",
+        care: "Take five quiet minutes without feeling you need to justify them."
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You can have an imperfect day and still call it a good one.",
+        care: ""
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You deserve to notice what is going right.",
+        care: "Take sixty seconds with no screen, no typing and no problem-solving."
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You can let yourself be helped.",
+        care: "Make one small part of your workspace feel calmer."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You are allowed to pause before you respond.",
+        care: ""
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "Your ideas are worth sharing.",
+        care: "Look away from your screen for one minute and let your eyes rest."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You can take your time with something important.",
+        care: "Put both feet on the floor and take one slow breath in and out."
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You are allowed to be human at work.",
+        care: "Make your next drink something you enjoy, not just something you need."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You have done enough to deserve a moment to breathe.",
+        care: ""
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You can make today lighter by doing one thing at a time.",
+        care: "Drink some water and take a proper breath before you keep going."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You do not have to turn every challenge into a lesson today.",
+        care: "Take a breath and ask: what is actually important right now?"
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You are allowed to simply get through the moment.",
+        care: ""
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You are appreciated more than you probably realise. You do not have to rush.",
+        care: "Stretch your hands, neck and shoulders before continuing."
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You do not need to have everything figured out today. You do not have to rush.",
+        care: "Take sixty seconds with no screen, no typing and no problem-solving."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "A difficult moment does not have to become a difficult day. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "The work you do matters, even on the days nobody says it. You do not have to rush.",
+        care: "Notice if you are holding tension somewhere and let it soften."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You are allowed to slow down without feeling guilty. You do not have to rush.",
+        care: "Look away from your screen for one minute and let your eyes rest."
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "Progress still counts when it feels small. You do not have to rush.",
+        care: "Give yourself permission to leave one non-urgent thing until tomorrow."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You deserve the same kindness you give to everyone else. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You have made it through every difficult day so far. You do not have to rush.",
+        care: "Give yourself credit for one invisible thing you have handled today."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You do not have to be productive every second to be valuable. You do not have to rush.",
+        care: "Let yourself finish one thing before beginning three more."
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "Today does not need to be perfect to be good. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "Your best can look different from one day to the next. You do not have to rush.",
+        care: "Think of one thing you have done well today."
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You make a difference simply by showing up. You do not have to rush.",
+        care: "Take the compliment without arguing with it."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "It is okay to ask for help. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are more than your to-do list. You do not have to rush.",
+        care: "Choose one thing you can stop carrying for the rest of today."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "One good moment can change the direction of your day. You do not have to rush.",
+        care: "If you are stuck, step away for two minutes and come back fresh."
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You bring something to this team that nobody else can. You do not have to rush.",
+        care: "Stand up, stretch and notice how your body feels."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You don't need a perfect day. Just a better next moment. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You are doing better than you think. You do not have to rush.",
+        care: "Ask yourself whether this really has to be solved right now."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "Your contribution is valuable even when it goes unnoticed. You do not have to rush.",
+        care: "If you can, take a short walk before starting the next task."
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You do not need to earn your rest. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "Small steps still move you forward. You do not have to rush.",
+        care: "Relax your shoulders and take three slow breaths."
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You are allowed to protect your energy. You do not have to rush.",
+        care: "Send a quick message to someone you appreciate."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "Being busy is not the same as being valuable. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "Your effort matters, even when the result is not immediate. You do not have to rush.",
+        care: "If you need help, choose one person you could ask."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You can be proud of how far you have come. You do not have to rush.",
+        care: "Take a moment to think of something you are looking forward to."
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are allowed to have an ordinary day. You do not have to rush.",
+        care: "If you are stuck, step away for two minutes and come back fresh."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You don't have to carry everything at once. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "One unfinished task does not define your day. You do not have to rush.",
+        care: "Take a moment to notice one thing that is going right."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You deserve moments that feel easy. You do not have to rush.",
+        care: "Ask yourself whether this really has to be solved right now."
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are capable of more than this stressful moment suggests. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You can begin again at any point in the day. You do not have to rush.",
+        care: "Give yourself a genuine break, not a break filled with more tasks."
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You are not behind. You are moving at your own pace. You do not have to rush.",
+        care: "Relax your shoulders and take three slow breaths."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "It is okay if today is about getting through, not getting ahead. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "Your presence matters. You do not have to rush.",
+        care: "Close your eyes for ten seconds and unclench your jaw."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "You can care about your work without letting it consume you. You do not have to rush.",
+        care: "If you need help, choose one person you could ask."
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You are allowed to say no when your plate is full. You do not have to rush.",
+        care: "Remind yourself that one bad moment does not get the whole day."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "A pause can be productive too. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You deserve credit for the things that nobody sees you handling. You do not have to rush.",
+        care: "Choose one small thing that could make the next hour easier."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You can take things one conversation, one email and one task at a time. You do not have to rush.",
+        care: "If your mind is racing, write down the next three things and ignore the rest for now."
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You do not need permission to take care of yourself. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "Your worth is not measured by how much you complete today. You do not have to rush.",
+        care: "Put your phone down for two minutes and let your mind be quiet."
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You can have a good day even if everything does not go to plan. You do not have to rush.",
+        care: "Take a moment to appreciate how much you have already managed."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "What feels heavy now may feel lighter after a pause. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You are allowed to be proud of yourself. You do not have to rush.",
+        care: "Step outside for a minute if you can and notice the air."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You have already done things you once thought would be hard. You do not have to rush.",
+        care: "Make your next drink something you enjoy, not just something you need."
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are somebody's reason their workday feels a little better. You do not have to rush.",
+        care: "Take a slow breath before your next reply or conversation."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You can make space for yourself too. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You do not need to explain why you need a break. You do not have to rush.",
+        care: "Take a breath and ask: what is actually important right now?"
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You are allowed to learn as you go. You do not have to rush.",
+        care: "Take five quiet minutes without feeling you need to justify them."
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "Not every problem needs to be solved immediately. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "You can be both a work in progress and worthy of appreciation. You do not have to rush.",
+        care: "Take sixty seconds with no screen, no typing and no problem-solving."
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "The smallest win is still a win. You do not have to rush.",
+        care: "Make one small part of your workspace feel calmer."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You have permission to leave some things for tomorrow. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You are stronger than one difficult email, meeting or moment. You do not have to rush.",
+        care: "Look away from your screen for one minute and let your eyes rest."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You can choose calm even when the day is busy. You do not have to rush.",
+        care: "Put both feet on the floor and take one slow breath in and out."
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You do not have to match everyone else's pace. You do not have to rush.",
+        care: "Make your next drink something you enjoy, not just something you need."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You are allowed to celebrate quiet progress. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You matter beyond the work you produce. You do not have to rush.",
+        care: "Drink some water and take a proper breath before you keep going."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You can reset without starting the whole day over. You do not have to rush.",
+        care: "Take a breath and ask: what is actually important right now?"
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You are allowed to take up space. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "The way you support others matters. You do not have to rush.",
+        care: "Stretch your hands, neck and shoulders before continuing."
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "Your kindness has an impact you may never see. You do not have to rush.",
+        care: "Take sixty seconds with no screen, no typing and no problem-solving."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You can let one mistake stay one mistake. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You are allowed to have boundaries. You do not have to rush.",
+        care: "Notice if you are holding tension somewhere and let it soften."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You can do hard things without being hard on yourself. You do not have to rush.",
+        care: "Look away from your screen for one minute and let your eyes rest."
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You are not required to be everything to everyone. You do not have to rush.",
+        care: "Give yourself permission to leave one non-urgent thing until tomorrow."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "There is room in today for something good. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You deserve to feel supported too. You do not have to rush.",
+        care: "Give yourself credit for one invisible thing you have handled today."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "One breath can be the start of a reset. You do not have to rush.",
+        care: "Let yourself finish one thing before beginning three more."
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You do not need to rush what can be done steadily. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You can trust yourself to handle the next step. You do not have to rush.",
+        care: "Think of one thing you have done well today."
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You are allowed to enjoy the good moments without waiting for something to go wrong. You do not have to rush.",
+        care: "Take the compliment without arguing with it."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You have more influence than you realise. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You can be tired and still be doing a good job. You do not have to rush.",
+        care: "Choose one thing you can stop carrying for the rest of today."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You deserve a little gentleness today. You do not have to rush.",
+        care: "If you are stuck, step away for two minutes and come back fresh."
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You do not have to prove your value. You do not have to rush.",
+        care: "Stand up, stretch and notice how your body feels."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You are allowed to change your mind. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You can leave work at work when the day is done. You do not have to rush.",
+        care: "Ask yourself whether this really has to be solved right now."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You have already made it through things you thought you couldn't. You do not have to rush.",
+        care: "If you can, take a short walk before starting the next task."
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You can choose progress over pressure. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You do not need to apologise for needing time. You do not have to rush.",
+        care: "Relax your shoulders and take three slow breaths."
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You are allowed to have limits. You do not have to rush.",
+        care: "Send a quick message to someone you appreciate."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "Your calm matters as much as your productivity. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You can be learning and still be capable. You do not have to rush.",
+        care: "If you need help, choose one person you could ask."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You have permission to enjoy today. You do not have to rush.",
+        care: "Take a moment to think of something you are looking forward to."
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You are enough on the quiet days too. You do not have to rush.",
+        care: "If you are stuck, step away for two minutes and come back fresh."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You do not need to fix everything for everyone. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You can take pride in being dependable without carrying the whole load. You do not have to rush.",
+        care: "Take a moment to notice one thing that is going right."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You are allowed to ask, 'Can this wait?' You do not have to rush.",
+        care: "Ask yourself whether this really has to be solved right now."
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You can have an imperfect day and still call it a good one. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You deserve to notice what is going right. You do not have to rush.",
+        care: "Give yourself a genuine break, not a break filled with more tasks."
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You can let yourself be helped. You do not have to rush.",
+        care: "Relax your shoulders and take three slow breaths."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You are allowed to pause before you respond. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "Your ideas are worth sharing. You do not have to rush.",
+        care: "Close your eyes for ten seconds and unclench your jaw."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You can take your time with something important. You do not have to rush.",
+        care: "If you need help, choose one person you could ask."
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You are allowed to be human at work. You do not have to rush.",
+        care: "Remind yourself that one bad moment does not get the whole day."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You have done enough to deserve a moment to breathe. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You can make today lighter by doing one thing at a time. You do not have to rush.",
+        care: "Choose one small thing that could make the next hour easier."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "You do not have to turn every challenge into a lesson today. You do not have to rush.",
+        care: "If your mind is racing, write down the next three things and ignore the rest for now."
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You are allowed to simply get through the moment. You do not have to rush.",
+        care: ""
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You are appreciated more than you probably realise. Let that be enough for now.",
+        care: "Put your phone down for two minutes and let your mind be quiet."
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You do not need to have everything figured out today. Let that be enough for now.",
+        care: "Take a moment to appreciate how much you have already managed."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "A difficult moment does not have to become a difficult day. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "The work you do matters, even on the days nobody says it. Let that be enough for now.",
+        care: "Step outside for a minute if you can and notice the air."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You are allowed to slow down without feeling guilty. Let that be enough for now.",
+        care: "Make your next drink something you enjoy, not just something you need."
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "Progress still counts when it feels small. Let that be enough for now.",
+        care: "Take a slow breath before your next reply or conversation."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You deserve the same kindness you give to everyone else. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You have made it through every difficult day so far. Let that be enough for now.",
+        care: "Take a breath and ask: what is actually important right now?"
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You do not have to be productive every second to be valuable. Let that be enough for now.",
+        care: "Take five quiet minutes without feeling you need to justify them."
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "Today does not need to be perfect to be good. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "Your best can look different from one day to the next. Let that be enough for now.",
+        care: "Take sixty seconds with no screen, no typing and no problem-solving."
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You make a difference simply by showing up. Let that be enough for now.",
+        care: "Make one small part of your workspace feel calmer."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "It is okay to ask for help. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You are more than your to-do list. Let that be enough for now.",
+        care: "Look away from your screen for one minute and let your eyes rest."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "One good moment can change the direction of your day. Let that be enough for now.",
+        care: "Put both feet on the floor and take one slow breath in and out."
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You bring something to this team that nobody else can. Let that be enough for now.",
+        care: "Make your next drink something you enjoy, not just something you need."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You don't need a perfect day. Just a better next moment. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You are doing better than you think. Let that be enough for now.",
+        care: "Drink some water and take a proper breath before you keep going."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "Your contribution is valuable even when it goes unnoticed. Let that be enough for now.",
+        care: "Take a breath and ask: what is actually important right now?"
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You do not need to earn your rest. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "Small steps still move you forward. Let that be enough for now.",
+        care: "Stretch your hands, neck and shoulders before continuing."
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are allowed to protect your energy. Let that be enough for now.",
+        care: "Take sixty seconds with no screen, no typing and no problem-solving."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "Being busy is not the same as being valuable. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "Your effort matters, even when the result is not immediate. Let that be enough for now.",
+        care: "Notice if you are holding tension somewhere and let it soften."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You can be proud of how far you have come. Let that be enough for now.",
+        care: "Look away from your screen for one minute and let your eyes rest."
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are allowed to have an ordinary day. Let that be enough for now.",
+        care: "Give yourself permission to leave one non-urgent thing until tomorrow."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You don't have to carry everything at once. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "One unfinished task does not define your day. Let that be enough for now.",
+        care: "Give yourself credit for one invisible thing you have handled today."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You deserve moments that feel easy. Let that be enough for now.",
+        care: "Let yourself finish one thing before beginning three more."
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You are capable of more than this stressful moment suggests. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "You can begin again at any point in the day. Let that be enough for now.",
+        care: "Think of one thing you have done well today."
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You are not behind. You are moving at your own pace. Let that be enough for now.",
+        care: "Take the compliment without arguing with it."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "It is okay if today is about getting through, not getting ahead. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "Your presence matters. Let that be enough for now.",
+        care: "Choose one thing you can stop carrying for the rest of today."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You can care about your work without letting it consume you. Let that be enough for now.",
+        care: "If you are stuck, step away for two minutes and come back fresh."
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You are allowed to say no when your plate is full. Let that be enough for now.",
+        care: "Stand up, stretch and notice how your body feels."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "A pause can be productive too. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You deserve credit for the things that nobody sees you handling. Let that be enough for now.",
+        care: "Ask yourself whether this really has to be solved right now."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You can take things one conversation, one email and one task at a time. Let that be enough for now.",
+        care: "If you can, take a short walk before starting the next task."
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You do not need permission to take care of yourself. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "Your worth is not measured by how much you complete today. Let that be enough for now.",
+        care: "Relax your shoulders and take three slow breaths."
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You can have a good day even if everything does not go to plan. Let that be enough for now.",
+        care: "Send a quick message to someone you appreciate."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "What feels heavy now may feel lighter after a pause. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You are allowed to be proud of yourself. Let that be enough for now.",
+        care: "If you need help, choose one person you could ask."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You have already done things you once thought would be hard. Let that be enough for now.",
+        care: "Take a moment to think of something you are looking forward to."
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You are somebody's reason their workday feels a little better. Let that be enough for now.",
+        care: "If you are stuck, step away for two minutes and come back fresh."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "You can make space for yourself too. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You do not need to explain why you need a break. Let that be enough for now.",
+        care: "Take a moment to notice one thing that is going right."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You are allowed to learn as you go. Let that be enough for now.",
+        care: "Ask yourself whether this really has to be solved right now."
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "Not every problem needs to be solved immediately. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You can be both a work in progress and worthy of appreciation. Let that be enough for now.",
+        care: "Give yourself a genuine break, not a break filled with more tasks."
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "The smallest win is still a win. Let that be enough for now.",
+        care: "Relax your shoulders and take three slow breaths."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You have permission to leave some things for tomorrow. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are stronger than one difficult email, meeting or moment. Let that be enough for now.",
+        care: "Close your eyes for ten seconds and unclench your jaw."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You can choose calm even when the day is busy. Let that be enough for now.",
+        care: "If you need help, choose one person you could ask."
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You do not have to match everyone else's pace. Let that be enough for now.",
+        care: "Remind yourself that one bad moment does not get the whole day."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You are allowed to celebrate quiet progress. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You matter beyond the work you produce. Let that be enough for now.",
+        care: "Choose one small thing that could make the next hour easier."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You can reset without starting the whole day over. Let that be enough for now.",
+        care: "If your mind is racing, write down the next three things and ignore the rest for now."
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You are allowed to take up space. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "The way you support others matters. Let that be enough for now.",
+        care: "Put your phone down for two minutes and let your mind be quiet."
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "Your kindness has an impact you may never see. Let that be enough for now.",
+        care: "Take a moment to appreciate how much you have already managed."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "You can let one mistake stay one mistake. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You are allowed to have boundaries. Let that be enough for now.",
+        care: "Step outside for a minute if you can and notice the air."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You can do hard things without being hard on yourself. Let that be enough for now.",
+        care: "Make your next drink something you enjoy, not just something you need."
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You are not required to be everything to everyone. Let that be enough for now.",
+        care: "Take a slow breath before your next reply or conversation."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "There is room in today for something good. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You deserve to feel supported too. Let that be enough for now.",
+        care: "Take a breath and ask: what is actually important right now?"
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "One breath can be the start of a reset. Let that be enough for now.",
+        care: "Take five quiet minutes without feeling you need to justify them."
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You do not need to rush what can be done steadily. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You can trust yourself to handle the next step. Let that be enough for now.",
+        care: "Take sixty seconds with no screen, no typing and no problem-solving."
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You are allowed to enjoy the good moments without waiting for something to go wrong. Let that be enough for now.",
+        care: "Make one small part of your workspace feel calmer."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You have more influence than you realise. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You can be tired and still be doing a good job. Let that be enough for now.",
+        care: "Look away from your screen for one minute and let your eyes rest."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You deserve a little gentleness today. Let that be enough for now.",
+        care: "Put both feet on the floor and take one slow breath in and out."
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You do not have to prove your value. Let that be enough for now.",
+        care: "Make your next drink something you enjoy, not just something you need."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You are allowed to change your mind. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You can leave work at work when the day is done. Let that be enough for now.",
+        care: "Drink some water and take a proper breath before you keep going."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "You have already made it through things you thought you couldn't. Let that be enough for now.",
+        care: "Take a breath and ask: what is actually important right now?"
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You can choose progress over pressure. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You do not need to apologise for needing time. Let that be enough for now.",
+        care: "Stretch your hands, neck and shoulders before continuing."
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You are allowed to have limits. Let that be enough for now.",
+        care: "Take sixty seconds with no screen, no typing and no problem-solving."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "Your calm matters as much as your productivity. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You can be learning and still be capable. Let that be enough for now.",
+        care: "Notice if you are holding tension somewhere and let it soften."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You have permission to enjoy today. Let that be enough for now.",
+        care: "Look away from your screen for one minute and let your eyes rest."
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are enough on the quiet days too. Let that be enough for now.",
+        care: "Give yourself permission to leave one non-urgent thing until tomorrow."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You do not need to fix everything for everyone. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You can take pride in being dependable without carrying the whole load. Let that be enough for now.",
+        care: "Give yourself credit for one invisible thing you have handled today."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You are allowed to ask, 'Can this wait?' Let that be enough for now.",
+        care: "Let yourself finish one thing before beginning three more."
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You can have an imperfect day and still call it a good one. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You deserve to notice what is going right. Let that be enough for now.",
+        care: "Think of one thing you have done well today."
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You can let yourself be helped. Let that be enough for now.",
+        care: "Take the compliment without arguing with it."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You are allowed to pause before you respond. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "Your ideas are worth sharing. Let that be enough for now.",
+        care: "Choose one thing you can stop carrying for the rest of today."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "You can take your time with something important. Let that be enough for now.",
+        care: "If you are stuck, step away for two minutes and come back fresh."
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You are allowed to be human at work. Let that be enough for now.",
+        care: "Stand up, stretch and notice how your body feels."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You have done enough to deserve a moment to breathe. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You can make today lighter by doing one thing at a time. Let that be enough for now.",
+        care: "Ask yourself whether this really has to be solved right now."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You do not have to turn every challenge into a lesson today. Let that be enough for now.",
+        care: "If you can, take a short walk before starting the next task."
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You are allowed to simply get through the moment. Let that be enough for now.",
+        care: ""
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You are appreciated more than you probably realise. One step at a time is still progress.",
+        care: "Relax your shoulders and take three slow breaths."
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You do not need to have everything figured out today. One step at a time is still progress.",
+        care: "Send a quick message to someone you appreciate."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "A difficult moment does not have to become a difficult day. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "The work you do matters, even on the days nobody says it. One step at a time is still progress.",
+        care: "If you need help, choose one person you could ask."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You are allowed to slow down without feeling guilty. One step at a time is still progress.",
+        care: "Take a moment to think of something you are looking forward to."
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "Progress still counts when it feels small. One step at a time is still progress.",
+        care: "If you are stuck, step away for two minutes and come back fresh."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You deserve the same kindness you give to everyone else. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You have made it through every difficult day so far. One step at a time is still progress.",
+        care: "Take a moment to notice one thing that is going right."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You do not have to be productive every second to be valuable. One step at a time is still progress.",
+        care: "Ask yourself whether this really has to be solved right now."
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "Today does not need to be perfect to be good. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "Your best can look different from one day to the next. One step at a time is still progress.",
+        care: "Give yourself a genuine break, not a break filled with more tasks."
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You make a difference simply by showing up. One step at a time is still progress.",
+        care: "Relax your shoulders and take three slow breaths."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "It is okay to ask for help. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You are more than your to-do list. One step at a time is still progress.",
+        care: "Close your eyes for ten seconds and unclench your jaw."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "One good moment can change the direction of your day. One step at a time is still progress.",
+        care: "If you need help, choose one person you could ask."
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You bring something to this team that nobody else can. One step at a time is still progress.",
+        care: "Remind yourself that one bad moment does not get the whole day."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You don't need a perfect day. Just a better next moment. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are doing better than you think. One step at a time is still progress.",
+        care: "Choose one small thing that could make the next hour easier."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "Your contribution is valuable even when it goes unnoticed. One step at a time is still progress.",
+        care: "If your mind is racing, write down the next three things and ignore the rest for now."
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You do not need to earn your rest. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "Small steps still move you forward. One step at a time is still progress.",
+        care: "Put your phone down for two minutes and let your mind be quiet."
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are allowed to protect your energy. One step at a time is still progress.",
+        care: "Take a moment to appreciate how much you have already managed."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "Being busy is not the same as being valuable. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "Your effort matters, even when the result is not immediate. One step at a time is still progress.",
+        care: "Step outside for a minute if you can and notice the air."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You can be proud of how far you have come. One step at a time is still progress.",
+        care: "Make your next drink something you enjoy, not just something you need."
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You are allowed to have an ordinary day. One step at a time is still progress.",
+        care: "Take a slow breath before your next reply or conversation."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "You don't have to carry everything at once. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "One unfinished task does not define your day. One step at a time is still progress.",
+        care: "Take a breath and ask: what is actually important right now?"
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You deserve moments that feel easy. One step at a time is still progress.",
+        care: "Take five quiet minutes without feeling you need to justify them."
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You are capable of more than this stressful moment suggests. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You can begin again at any point in the day. One step at a time is still progress.",
+        care: "Take sixty seconds with no screen, no typing and no problem-solving."
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You are not behind. You are moving at your own pace. One step at a time is still progress.",
+        care: "Make one small part of your workspace feel calmer."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "It is okay if today is about getting through, not getting ahead. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "Your presence matters. One step at a time is still progress.",
+        care: "Look away from your screen for one minute and let your eyes rest."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You can care about your work without letting it consume you. One step at a time is still progress.",
+        care: "Put both feet on the floor and take one slow breath in and out."
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You are allowed to say no when your plate is full. One step at a time is still progress.",
+        care: "Make your next drink something you enjoy, not just something you need."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "A pause can be productive too. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You deserve credit for the things that nobody sees you handling. One step at a time is still progress.",
+        care: "Drink some water and take a proper breath before you keep going."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You can take things one conversation, one email and one task at a time. One step at a time is still progress.",
+        care: "Take a breath and ask: what is actually important right now?"
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You do not need permission to take care of yourself. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "Your worth is not measured by how much you complete today. One step at a time is still progress.",
+        care: "Stretch your hands, neck and shoulders before continuing."
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You can have a good day even if everything does not go to plan. One step at a time is still progress.",
+        care: "Take sixty seconds with no screen, no typing and no problem-solving."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "What feels heavy now may feel lighter after a pause. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You are allowed to be proud of yourself. One step at a time is still progress.",
+        care: "Notice if you are holding tension somewhere and let it soften."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You have already done things you once thought would be hard. One step at a time is still progress.",
+        care: "Look away from your screen for one minute and let your eyes rest."
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You are somebody's reason their workday feels a little better. One step at a time is still progress.",
+        care: "Give yourself permission to leave one non-urgent thing until tomorrow."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You can make space for yourself too. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You do not need to explain why you need a break. One step at a time is still progress.",
+        care: "Give yourself credit for one invisible thing you have handled today."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You are allowed to learn as you go. One step at a time is still progress.",
+        care: "Let yourself finish one thing before beginning three more."
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "Not every problem needs to be solved immediately. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You can be both a work in progress and worthy of appreciation. One step at a time is still progress.",
+        care: "Think of one thing you have done well today."
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "The smallest win is still a win. One step at a time is still progress.",
+        care: "Take the compliment without arguing with it."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You have permission to leave some things for tomorrow. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are stronger than one difficult email, meeting or moment. One step at a time is still progress.",
+        care: "Choose one thing you can stop carrying for the rest of today."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You can choose calm even when the day is busy. One step at a time is still progress.",
+        care: "If you are stuck, step away for two minutes and come back fresh."
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You do not have to match everyone else's pace. One step at a time is still progress.",
+        care: "Stand up, stretch and notice how your body feels."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You are allowed to celebrate quiet progress. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You matter beyond the work you produce. One step at a time is still progress.",
+        care: "Ask yourself whether this really has to be solved right now."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "You can reset without starting the whole day over. One step at a time is still progress.",
+        care: "If you can, take a short walk before starting the next task."
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You are allowed to take up space. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "The way you support others matters. One step at a time is still progress.",
+        care: "Relax your shoulders and take three slow breaths."
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "Your kindness has an impact you may never see. One step at a time is still progress.",
+        care: "Send a quick message to someone you appreciate."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You can let one mistake stay one mistake. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You are allowed to have boundaries. One step at a time is still progress.",
+        care: "If you need help, choose one person you could ask."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You can do hard things without being hard on yourself. One step at a time is still progress.",
+        care: "Take a moment to think of something you are looking forward to."
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are not required to be everything to everyone. One step at a time is still progress.",
+        care: "If you are stuck, step away for two minutes and come back fresh."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "There is room in today for something good. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You deserve to feel supported too. One step at a time is still progress.",
+        care: "Take a moment to notice one thing that is going right."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "One breath can be the start of a reset. One step at a time is still progress.",
+        care: "Ask yourself whether this really has to be solved right now."
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You do not need to rush what can be done steadily. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You can trust yourself to handle the next step. One step at a time is still progress.",
+        care: "Give yourself a genuine break, not a break filled with more tasks."
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You are allowed to enjoy the good moments without waiting for something to go wrong. One step at a time is still progress.",
+        care: "Relax your shoulders and take three slow breaths."
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You have more influence than you realise. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You can be tired and still be doing a good job. One step at a time is still progress.",
+        care: "Close your eyes for ten seconds and unclench your jaw."
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "You deserve a little gentleness today. One step at a time is still progress.",
+        care: "If you need help, choose one person you could ask."
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You do not have to prove your value. One step at a time is still progress.",
+        care: "Remind yourself that one bad moment does not get the whole day."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You are allowed to change your mind. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "You can leave work at work when the day is done. One step at a time is still progress.",
+        care: "Choose one small thing that could make the next hour easier."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You have already made it through things you thought you couldn't. One step at a time is still progress.",
+        care: "If your mind is racing, write down the next three things and ignore the rest for now."
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You can choose progress over pressure. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You do not need to apologise for needing time. One step at a time is still progress.",
+        care: "Put your phone down for two minutes and let your mind be quiet."
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are allowed to have limits. One step at a time is still progress.",
+        care: "Take a moment to appreciate how much you have already managed."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "Your calm matters as much as your productivity. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You can be learning and still be capable. One step at a time is still progress.",
+        care: "Step outside for a minute if you can and notice the air."
+      },
+      {
+        category: "In case nobody told you today",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You have permission to enjoy today. One step at a time is still progress.",
+        care: "Make your next drink something you enjoy, not just something you need."
+      },
+      {
+        category: "Today's reminder",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You are enough on the quiet days too. One step at a time is still progress.",
+        care: "Take a slow breath before your next reply or conversation."
+      },
+      {
+        category: "A little perspective",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You do not need to fix everything for everyone. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "For you today",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You can take pride in being dependable without carrying the whole load. One step at a time is still progress.",
+        care: "Take a breath and ask: what is actually important right now?"
+      },
+      {
+        category: "60-second reset",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You are allowed to ask, 'Can this wait?' One step at a time is still progress.",
+        care: "Take five quiet minutes without feeling you need to justify them."
+      },
+      {
+        category: "Today's encouragement",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You can have an imperfect day and still call it a good one. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "A reminder worth keeping",
+        icon: "💛",
+        theme: "sun",
+        affirmation: "You deserve to notice what is going right. One step at a time is still progress.",
+        care: "Take sixty seconds with no screen, no typing and no problem-solving."
+      },
+      {
+        category: "Take a moment",
+        icon: "💙",
+        theme: "blue",
+        affirmation: "You can let yourself be helped. One step at a time is still progress.",
+        care: "Make one small part of your workspace feel calmer."
+      },
+      {
+        category: "Just for today",
+        icon: "🌷",
+        theme: "peach",
+        affirmation: "You are allowed to pause before you respond. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "In case you forgot",
+        icon: "💜",
+        theme: "lavender",
+        affirmation: "Your ideas are worth sharing. One step at a time is still progress.",
+        care: "Look away from your screen for one minute and let your eyes rest."
+      },
+      {
+        category: "Something worth remembering",
+        icon: "🌿",
+        theme: "sage",
+        affirmation: "You can take your time with something important. One step at a time is still progress.",
+        care: "Put both feet on the floor and take one slow breath in and out."
+      },
+      {
+        category: "Today's permission slip",
+        icon: "🌸",
+        theme: "peach",
+        affirmation: "You are allowed to be human at work. One step at a time is still progress.",
+        care: "Make your next drink something you enjoy, not just something you need."
+      },
+      {
+        category: "A thought for today",
+        icon: "🌊",
+        theme: "blue",
+        affirmation: "You have done enough to deserve a moment to breathe. One step at a time is still progress.",
+        care: ""
+      },
+      {
+        category: "A small boost",
+        icon: "☀️",
+        theme: "sun",
+        affirmation: "You can make today lighter by doing one thing at a time. One step at a time is still progress.",
+        care: "Drink some water and take a proper breath before you keep going."
+      },
+      {
+        category: "One thing to carry with you",
+        icon: "✨",
+        theme: "lavender",
+        affirmation: "You do not have to turn every challenge into a lesson today. One step at a time is still progress.",
+        care: "Take a breath and ask: what is actually important right now?"
+      },
+      {
+        category: "A quiet reminder",
+        icon: "🌱",
+        theme: "sage",
+        affirmation: "You are allowed to simply get through the moment. One step at a time is still progress.",
+        care: ""
       }
-
     ];
 
     const themes = {
-
       sage: {
-
         background: "linear-gradient(135deg, #e7efe7, #cfded0)",
-
         care: "#edf5ed"
-
       },
-
       sun: {
-
         background: "linear-gradient(135deg, #fff5d6, #f8df9f)",
-
         care: "#fff8e6"
-
       },
-
       blue: {
-
         background: "linear-gradient(135deg, #e4f1f7, #cbdfe9)",
-
         care: "#edf7fb"
-
       },
-
       peach: {
-
         background: "linear-gradient(135deg, #fde8df, #f4c9ba)",
-
         care: "#fff0ea"
-
       },
-
       lavender: {
-
         background: "linear-gradient(135deg, #eee7f7, #d8c9ea)",
-
         care: "#f5effb"
-
       }
-
     };
 
+    // Continuous 400-day rotation. Day 1 is 28 August 2026.
+    const rotationStart = new Date(2026, 7, 28);
     const today = new Date();
+    rotationStart.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
 
-    const start = new Date(today.getFullYear(), 0, 0);
+    const elapsedDays = Math.floor((today - rotationStart) / 86400000);
+    const index = ((elapsedDays % messages.length) + messages.length) % messages.length;
 
-    const difference = today - start;
-
-    const dayOfYear = Math.floor(difference / 86400000);
-
-    const item = messages[(dayOfYear - 1) % messages.length];
-
+    const item = messages[index];
     const theme = themes[item.theme];
 
     document.body.style.background = theme.background;
-
     document.getElementById("icon").textContent = item.icon;
-
     document.getElementById("category").textContent = item.category;
-
     document.getElementById("message").textContent = item.affirmation;
 
     const careBox = document.getElementById("careBox");
 
     if (item.care && item.care.trim() !== "") {
-
       careBox.style.display = "block";
-
       careBox.style.background = theme.care;
-
       document.getElementById("careTitle").textContent = "A little moment for you";
-
       document.getElementById("careText").textContent = item.care;
-
     }
 
     const neededButton = document.getElementById("neededButton");
-
     const response = document.getElementById("response");
 
     neededButton.addEventListener("click", function () {
-
       response.textContent = "Then this one was meant for you. ❤️";
-
       neededButton.textContent = "❤️ Keep this one with you";
-
     });
-
   </script>
-
 </body>
-
 </html>
