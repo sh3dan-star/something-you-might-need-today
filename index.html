@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Something You Might Need Today</title>
+
+  <style>
+
+    body {
+
+      font-family: Arial, sans-serif;
+
+      background: #f4f7f3;
+
+      color: #2f3a32;
+
+      margin: 0;
+
+      padding: 30px 20px;
+
+      text-align: center;
+
+    }
+
+    .card {
+
+      max-width: 600px;
+
+      margin: 60px auto;
+
+      background: white;
+
+      padding: 40px 30px;
+
+      border-radius: 20px;
+
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+
+    }
+
+    .small-title {
+
+      font-size: 14px;
+
+      letter-spacing: 2px;
+
+      color: #6f7d70;
+
+      margin-bottom: 20px;
+
+    }
+
+    h1 {
+
+      font-size: 32px;
+
+      margin-bottom: 25px;
+
+    }
+
+    .message {
+
+      font-size: 24px;
+
+      line-height: 1.5;
+
+      margin-bottom: 30px;
+
+    }
+
+    .self-care {
+
+      background: #eef4ec;
+
+      padding: 20px;
+
+      border-radius: 14px;
+
+      font-size: 18px;
+
+      line-height: 1.5;
+
+    }
+
+    .footer {
+
+      margin-top: 30px;
+
+      color: #7a857b;
+
+      font-size: 14px;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="card">
+
+    <div class="small-title">
+
+      SOMETHING YOU MIGHT NEED TODAY
+
+    </div>
+
+    <h1>🌿 Today's Reminder</h1>
+
+    <div class="message" id="message"></div>
+
+    <div class="self-care" id="selfCare"></div>
+
+    <div class="footer">
+
+      Come back tomorrow. There'll be something new waiting for you.
+
+    </div>
+
+  </div>
+
+  <script>
+
+    const messages = [
+
+      {
+
+        affirmation: "You do not need to have everything figured out today.",
+
+        care: "Take one slow breath. Relax your shoulders. Give yourself permission to just handle the next thing."
+
+      },
+
+      {
+
+        affirmation: "The work you do matters, even on the days nobody says it.",
+
+        care: "Take a minute to recognise one thing you have done well today."
+
+      },
+
+      {
+
+        affirmation: "You are allowed to slow down without feeling guilty.",
+
+        care: "Step away from your screen for two minutes and give your eyes a break."
+
+      },
+
+      {
+
+        affirmation: "A difficult moment does not have to become a difficult day.",
+
+        care: "Reset. Take a drink of water and start the next moment fresh."
+
+      },
+
+      {
+
+        affirmation: "Your contribution is more valuable than you probably realise.",
+
+        care: "Think of one person whose day you may have made a little easier."
+
+      },
+
+      {
+
+        affirmation: "Progress still counts when it feels small.",
+
+        care: "Pick one simple thing you can finish next. One step is enough."
+
+      },
+
+      {
+
+        affirmation: "You deserve the same kindness you give to everyone else.",
+
+        care: "Talk to yourself today the way you would talk to a good friend."
+
+      },
+
+      {
+
+        affirmation: "You have made it through every difficult day so far.",
+
+        care: "Take five slow breaths and remind yourself that this moment will pass too."
+
+      },
+
+      {
+
+        affirmation: "You do not have to be productive every second to be valuable.",
+
+        care: "Give yourself a genuine five-minute break without feeling you need to earn it."
+
+      },
+
+      {
+
+        affirmation: "There is no such thing as a small act of kindness.",
+
+        care: "Send someone a quick message telling them something you appreciate about them."
+
+      },
+
+      {
+
+        affirmation: "You are doing better than you think.",
+
+        care: "Pause and acknowledge one thing you have achieved recently."
+
+      },
+
+      {
+
+        affirmation: "Today does not need to be perfect to be good.",
+
+        care: "Look for one small thing today that made you smile."
+
+      },
+
+      {
+
+        affirmation: "Your best can look different from one day to the next.",
+
+        care: "Be realistic about what you have the energy for today."
+
+      },
+
+      {
+
+        affirmation: "You make a difference simply by showing up.",
+
+        care: "Take a moment to appreciate how far you have already come."
+
+      },
+
+      {
+
+        affirmation: "It is okay to ask for help.",
+
+        care: "If something feels heavy today, consider sharing the load with someone you trust."
+
+      },
+
+      {
+
+        affirmation: "You are more than your to-do list.",
+
+        care: "Take 60 seconds to do absolutely nothing except breathe."
+
+      },
+
+      {
+
+        affirmation: "One good moment can change the direction of your day.",
+
+        care: "Do something small that makes you feel good — make a coffee, stretch, walk outside or play a favourite song."
+
+      },
+
+      {
+
+        affirmation: "You bring something to this team that nobody else can.",
+
+        care: "Remember one strength you have that other people value."
+
+      },
+
+      {
+
+        affirmation: "You don't need a perfect day. Just a better next moment.",
+
+        care: "Choose one thing you can do right now that will make the next hour easier."
+
+      },
+
+      {
+
+        affirmation: "In case nobody has told you today — you are appreciated.",
+
+        care: "Take that compliment without arguing with it. You deserve it."
+
+      }
+
+    ];
+
+    const today = new Date();
+
+    const start = new Date(today.getFullYear(), 0, 0);
+
+    const difference = today - start;
+
+    const dayOfYear = Math.floor(difference / 86400000);
+
+    const todaysMessage = messages[(dayOfYear - 1) % messages.length];
+
+    document.getElementById("message").textContent =
+
+      todaysMessage.affirmation;
+
+    document.getElementById("selfCare").innerHTML =
+
+      "<strong>🌱 A little self-care moment</strong><br><br>" +
+
+      todaysMessage.care;
+
+  </script>
+
+</body>
+
+</html>
